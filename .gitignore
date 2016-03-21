@@ -1,0 +1,10 @@
+mytest/
+bak/
+bakfile.sh
+.svn
+*.o
+kalignP
+kalignP_debug
+submatrix
+tags
+Makefile

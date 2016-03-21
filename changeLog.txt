@@ -1,0 +1,17 @@
+
+LOG: 2010-12-16 10:30:11 Thursday  Week 50 <nanjiang@illergard>
+    1. The "EXTRA 1" output is removed when the "-q" option is on
+    2. Change the kalign position specific gap penalty scheme. 
+    Two modes:
+    (1). {gpo: 1 2 0.5 0.6}
+    (2). {gpo: 1-43:1 55:0.5 43:-3}
+    Here the value is not the direct gap penalty, but the multiplication value
+    the real gpo[i] = m(i)*default_gpo      
+    3. when no PSGP are supplied, call the original kalign function
+
+
+LOG: 2014-11-28 09:24:49 Friday  Week 47 <nanjiang@shu>
+    1. added option -custom_matrix, so that the user defined substitution matrix
+    can be input
+    2. add an example matrix "domaln.submatrix.txt" for domain seq alignment
+

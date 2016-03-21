@@ -1,0 +1,40 @@
+PREFIX			= /usr/local/bin
+TEST				= test/
+CC					= gcc  
+CFLAGS			= -O9  -Wall 
+DEBUGFLAGS		= -ggdb -DDEBUG -DDEBUG_READ_SEQ -DDEBUG_MEM -DDEBUG_SS -DDEBUG_PS -DDEBUG_PROFILE -Wall 
+
+SOURCES			= kalignP_distance_calculation.c kalignP_dp.c kalignP_input.c kalignP_main.c kalignP_mem.c kalignP_interface.c kalignP_misc.c kalignP_tree.c  kalignP_profile.c kalignP_alignment_types.c kalignP_feature.c kalignP_hirschberg.c  kalignP_advanced_gaps.c kalignP_hirschberg_dna.c  kalignP_output.c kalignP_string_matching.c kalignP_profile_alignment.c 
+PROGS				= kalignP
+DEBUGPROGS	= kalignP_debug
+
+
+OBJECTS			= $(SOURCES:.c=.o)
+DEBUGOBJECTS	= $(SOURCES:.c=_debug.o)
+
+
+.PHONY: clean
+
+all: $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) -o $(PROGS)
+	
+%.o:	%.c
+	$(CC) $(CFLAGS) -c $<
+	
+debug: $(DEBUGOBJECTS)
+	$(CC) $(DEBUGFLAGS) $(DEBUGOBJECTS) -o $(DEBUGPROGS)	
+
+%_debug.o:	%.c
+	$(CC) $(DEBUGFLAGS) -c $< -o $@
+
+
+install:
+	cp $(PROGS) /usr/local/bin/
+	
+clean: 
+	rm -f $(PROGS) $(OBJECTS)
+	rm -f $(DEBUGPROGS) $(DEBUGOBJECTS)
+	rm -f config.status config.log config.h Makefile
+	rm -f test*
+	rm -f *~
+	

@@ -1,0 +1,85 @@
+Logging from 2010-11-01 Monday Week 44
+
+#=================================================================
+LOG: 2010-11-01 15:08:33 Monday  Week 44 <nanjiang@illergard>
+    kalign and kalignP are different for the sequence "test/1havA_ref1.fa"
+    The difference of kalign and kalignP is caused by the _ps_ procedure. 
+	in the function  backward_hirsch_ps_dyn_new2()
+    The last part of the code:
+	the code
+				s[j].gb = MAX(s[j].gb-gpeArray2[j]*wf2_i, ca-gpeArray2[j]*wf2_i);
+    should be 
+				s[j].gb = MAX(s[j].gb-gpeArray2[j]*wf2_i, ca-gpoArray2[j]*wf2_i);
+    It is a typo of gpoArray2 to gpeArray2
+
+		if(hm->startb){ /*the difference between the kalingP and kaign is caused by this code as of 2010-11-03 14:45:34 Wednesday Week 44*/
+				/*s[j].gb = MAX(s[j].gb+prof1[28], ca+prof1[27]);*/
+				/*s[j].gb = MAX(s[j].gb-gpeArray2[j]*sip, ca-gpoArray2[j]*sip);*/
+				s[j].gb = MAX(s[j].gb-gpeArray2[j]*wf2_i, ca-gpoArray2[j]*wf2_i);
+		}else{
+				/*s[j].gb = MAX(s[j].gb,ca)+prof1[29];*/
+				/*s[j].gb = MAX(s[j].gb,ca)-tgpeArray2[j]*sip;*/
+				s[j].gb = MAX(s[j].gb,ca)-tgpeArray2[j]*wf2_i;
+		}
+    This bug is fixed as of 2010-11-03 14:50:50 Wednesday Week 44
+#=================================================================
+LOG: 2010-12-22 12:27:28 Wednesday  Week 51 <nanjiang@illergard>
+  Using 'icc' instead of 'gcc', kalignP is 15% faster, but the result is
+  slightly different, check it
+#=================================================================
+LOG: 2011-02-23 20:21:46 Wednesday  Week 08 <nanjiang@illergard>
+  1. For profile to sequence alignment, it seems for Kalign2, 
+
+  Gap_profile = gpo * num_seq
+  Gap_seq     = gpo * num_res
+
+  In this case, Gap_seq is always <= Gap_profile and Gap_seq == Gap_profile only when no
+  gaps exist in the profile at that position.
+  This means it is always harder to open a gap at the profile than the
+  sequence. The fewer the gaps (more the num_res), the harder to open a gap at
+  the aligned sequence, on the other hand, the easier to open a gap at the
+  profile. This is opposite to the principle described in the Kalign2 paper
+  that the fewer the gaps, the harder to open a gap in the profile.
+
+  For profile to sequence alignment
+  (1). check if prof1[27]/nResArray1/weightArray1 == gpo .... YES
+  (2). check if weightArray1 == 1           .... YES
+
+  To fulfill the principle that the fewer the gaps, the harder to open a gap,
+  it should be 
+    Gap_profile = gpo * num_res
+    Gap_seq     = gpo * num_seq
+
+  To meet this
+  gpo * num_res * 1 * w * wf1 = gpo * num_res 
+  ==> wf_profile = 1/w
+      wf_seq     = num_seq
+
+  where w = 1.0 + ((num_res-1)/num_seq)* gap_inc
+  by default, gap_inc = 0, so w = 1.
+
+  2. For profile to profile alignment
+
+  GP_profile1 = gpo * num_res2 * num_seq1
+  GP_profile2 = gpo * num_res1 * num_seq2 
+
+
+  (1). check if prof1[27]/nResArray1/weightArray1 == gpo .... YES
+  (2). check if prof2[27]/nResArray2/weightArray2 == gpo .... YES  
+  (3). check if weightArray1 == nSeq2       .... YES
+  (4). check if weightArray2 == nSeq1       .... YES
+
+  It should be 
+    Gap_profile1 = gpo * num_res1 * (num_seq2)
+    Gap_profile2 = gpo * num_res2 * (num_seq1)
+  to meet that
+  gpo * num_res1 * weightArray1 * wf1 = gpo * num_res1 * num_seq2
+  ==> wf1 = num_seq2/weightArray1 = 1/w
+  
+  gpo * num_res2 * weightArray2 * wf2 = gpo * num_res2 * num_seq1
+  ==> wf2 = num_seq1/weightArry2 = 1/w;
+
+
+
+
+   
