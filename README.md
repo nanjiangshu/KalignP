@@ -40,7 +40,7 @@ First download the source code by
 
 Then run 
 
-    $ cd kalignP
+    $ cd KalignP
     $ ./configure
     $ make
     $ sudo make install
