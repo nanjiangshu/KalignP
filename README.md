@@ -75,6 +75,12 @@ For more options, type
 
 `kalignP -h`
 
+###Examples
+
+`kalignP test/test.fasta test/test.aln`
+
+`kalignP test/t1.gp.fa test/t1.gp.aln`
+
 ##How KalignP works
 
 KalignP changes the behavior of the alignment intuitively with the externally
