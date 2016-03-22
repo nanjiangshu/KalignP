@@ -77,7 +77,7 @@ For more options, type
 
 ###Examples
 
-`kalignP test/test.fasta test/test.aln`
+`kalignP test/test.fa test/test.aln`
 
 `kalignP test/t1.gp.fa test/t1.gp.aln`
 
